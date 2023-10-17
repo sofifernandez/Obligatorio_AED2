@@ -1,0 +1,2 @@
+No pude hacer el equals en el enum TipoViajero. Igual no sé si tiene sentido que el equals de TestViajeroDato incluya el tipo de viajero. Porque capaz es la misma persona pero quiere cambiar su status. No conviene tenerlo ingresado dos veces. 
+
