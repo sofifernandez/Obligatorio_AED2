@@ -1,7 +1,9 @@
 package sistema;
 
+import dominio.Ciudad;
 import dominio.Viajero;
 import estructuras.arbol.ABBImp;
+import estructuras.grafo.Grafo;
 import interfaz.*;
 
 import java.sql.SQLOutput;
@@ -10,10 +12,11 @@ import java.util.regex.Pattern;
 
 public class ImplementacionSistema implements Sistema {
 
-    private ABBImp arbolViajeros=new ABBImp();
-    private ABBImp arbolPremium=new ABBImp();
-    private ABBImp arbolEstandar=new ABBImp();
-    private ABBImp arbolCasual=new ABBImp();
+    private ABBImp arbolViajeros;
+    private ABBImp arbolPremium;
+    private ABBImp arbolEstandar;
+    private ABBImp arbolCasual;
+    private Grafo grafoCiudades;
 
     @Override
     public Retorno inicializarSistema(int maxCiudades) {
@@ -22,6 +25,7 @@ public class ImplementacionSistema implements Sistema {
             arbolPremium=new ABBImp();
             arbolEstandar=new ABBImp();
             arbolCasual=new ABBImp();
+            grafoCiudades= new Grafo(maxCiudades);
             return Retorno.ok();
         }
         return Retorno.error1("El sistema debe tener más de 5 ciudades");
@@ -115,9 +119,17 @@ public class ImplementacionSistema implements Sistema {
         return Retorno.error1(lista);
     }
 
+
+    //---------------------------GRAFOS------------------------------------------------------------------
     @Override
     public Retorno registrarCiudad(String codigo, String nombre) {
-        return Retorno.noImplementada();
+        if(grafoCiudades.esLleno()) return Retorno.error1("Ha llegado al máximo de ciudades posibles");
+        if(esVacioONulo(codigo) || esVacioONulo(nombre)) return Retorno.error2("Ingrese todos los datos");
+        Ciudad nuevaCiudad=new Ciudad(codigo,nombre);
+        if(!nuevaCiudad.esValidoCodigo(codigo)) return Retorno.error3("El código es inválido");
+        if(grafoCiudades.existeVertice(nuevaCiudad)) return Retorno.error4("Ese código ya existe");
+        grafoCiudades.agregarVertice(nuevaCiudad);
+        return Retorno.ok();
     }
 
     @Override
@@ -152,24 +164,9 @@ public class ImplementacionSistema implements Sistema {
 
         // Crea un patrón combinando las dos expresiones regulares con el operador OR (|)
         Pattern pattern = Pattern.compile(regex1 + "|" + regex2);
-
-        // Compara la cédula con el patrón
         Matcher matcher = pattern.matcher(cedula);
-
-        //System.out.println("*******************************************************************************");
-        //System.out.println(cedula);
-        //System.out.println(matcher.matches());
-        // Devuelve true si la cédula coincide con uno de los formatos
         return matcher.matches();
     }
 
-    private boolean esValidoFormatoCedulaDOS(String cedula){
-        String regex1 = "^[1-9]\\d\\.\\d{3}\\.\\d{3}-\\d$";
-        String regex2 = "^\\d{3}\\.\\d{3}-\\d$";
-        System.out.println("*******************************************************************************");
-        System.out.println(cedula);
-        boolean res=cedula.matches(regex1) || cedula.matches(regex2);
-        System.out.println(res);
-        return res;
-    }
+
 }

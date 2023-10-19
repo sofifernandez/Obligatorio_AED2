@@ -165,6 +165,19 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
         };
     }
 
+    public T get(int index) {
+        if (index < 0 || index >= largo) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+
+        NodoLista<T> current = inicio;
+        for (int i = 0; i < index; i++) {
+            current = current.getSig();
+        }
+
+        return current.getDato();
+    }
+
 
 
 }
