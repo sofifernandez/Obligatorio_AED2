@@ -57,9 +57,6 @@ public class TestViajeros {
 
     }
 
-
-
-
     @Test
     public void testAgregarError1() {
         //dado que

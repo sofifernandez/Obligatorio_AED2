@@ -4,6 +4,7 @@ public class Arista {
     private boolean existe;
     private int peso;
 
+
     public Arista() {
         this.existe = false;
         this.peso = 0;

@@ -1,8 +1,10 @@
 package sistema;
 
 import dominio.Ciudad;
+import dominio.Conexion;
 import interfaz.Retorno;
 import interfaz.Sistema;
+import interfaz.TipoConexion;
 import interfaz.TipoViajero;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -40,19 +42,44 @@ public class TestSistemaAFuturo {
             new Ciudad("VIENN6", "Viena")
     };
 
+
+    private static final Conexion[] CONEXIONES_VALIDAD= new Conexion[]{
+            new Conexion(1,1000,5, TipoConexion.RUTA_AEREA),
+            new Conexion(2,500,5, TipoConexion.RUTA_FERROVIARIA),
+            new Conexion(3,200,5, TipoConexion.RUTA_NACIONAL),
+            new Conexion(4,100,5, TipoConexion.RUTA_NACIONAL),
+            new Conexion(5,2000,5, TipoConexion.RUTA_AEREA),
+            new Conexion(6,800,5, TipoConexion.RUTA_MARITIMA),
+    };
+
     @Test
     public void testAgregarOk() {
         //dado que
         Sistema s = tengoUnSistemaValido();
         for (int i = 0; i < CIUDADES_VALIDAS_ORDENADAS.length; i++) {
-
-            //cuando
             Ciudad ciudad = CIUDADES_VALIDAS_ORDENADAS[i];
             System.out.println(ciudad);
             Retorno resultado = s.registrarCiudad(ciudad.getCodigo(), ciudad.getNombre());
-            //entonces
             checkearOk(resultado, format("La ciudad '%s' deberia haberse agregado correctamente", ciudad));
         }
+    }
+
+    @Test
+    public void testAgregarError1() {
+
+    }
+
+    @Test
+    public void testAgregarError2() {
+
+    }
+
+    @Test
+    public void testAgregarError3() {
+
+    }
+
+    public void testAgregarConexion(){
 
     }
 

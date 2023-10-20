@@ -1,47 +1,41 @@
 package estructuras.grafo;
 
-import dominio.Ciudad;
-import estructuras.tad.lista.Lista;
-import estructuras.tad.lista.ListaDinamica;
-
-import java.sql.SQLOutput;
-
-public class Grafo<T> {
+public class GrafoComplejo {
     private int tope;
     private int cantidad;
     private Object[] vertices; //ESTO NO SÉ SI VA ASÍ O CON <T>
-    private Arista[][] matAdy;
+    private AristaCompleja[][] matAdy;
 
-    public Grafo(int unTope) {
+    public GrafoComplejo(int unTope) {
         this.tope = unTope;
         this.cantidad = 0;
         this.vertices = new Object[this.tope];
-        this.matAdy = new Arista[this.tope][this.tope];
+        this.matAdy = new AristaCompleja[this.tope][this.tope];
         for (int i = 0; i < this.tope; i++) {
             for (int j = 0; j < this.tope; j++) {
-                this.matAdy[i][j] = new Arista();
+                this.matAdy[i][j] = new AristaCompleja();
             }
         }
         //System.out.println(printVertices());
         //System.out.println(printmatrizAdy());
     }
 
-    public Grafo(int unTope, boolean esDirigido) {
+    public GrafoComplejo(int unTope, boolean esDirigido) {
         this.tope = unTope;
         this.cantidad = 0;
         this.vertices = new Object[this.tope];
-        this.matAdy = new Arista[this.tope][this.tope];
+        this.matAdy = new AristaCompleja[this.tope][this.tope];
         if (esDirigido) {
             for (int i = 0; i < this.tope; i++) {
                 for (int j = 0; j < this.tope; j++) {
-                    this.matAdy[i][j] = new Arista();
+                    this.matAdy[i][j] = new AristaCompleja();
                 }
 
             }
         } else {
             for (int i = 0; i < this.tope; i++) {
                 for (int j = i; j < this.tope; j++) {
-                    this.matAdy[i][j] = new Arista();
+                    this.matAdy[i][j] = new AristaCompleja();
                     this.matAdy[j][i] = this.matAdy[i][j];
                 }
             }
@@ -75,6 +69,15 @@ public class Grafo<T> {
         return -1;
     }
 
+    public Object obtenerVertice(Object vert){
+        for (int i = 0; i < this.tope; i++) {
+            if (this.vertices[i]!=null && this.vertices[i].equals(vert)) {
+                return this.vertices[i];
+            }
+        }
+        return null;
+    }
+
 
 
 
@@ -86,30 +89,35 @@ public class Grafo<T> {
         this.cantidad++;
     }
 
-    //TODO: esto se puede hacer así? o hay que pasarle el objeto?
+    public boolean existeDatoEnArista(Object origen, Object destino, Object dato) {
+        int posOrig = obtenerPos(origen);
+        int posDest = obtenerPos(destino);
+        return this.matAdy[posOrig][posDest].existeEnLista(dato);
+    }
+
+
 
     // PRE: existeVertice
-    public void borrarVertice(String vert) {
-        int posVert = obtenerPos(vert);
-        this.vertices[posVert] = null;
-        this.cantidad--;
-        for (int i = 0; i < this.tope; i++) {
-            this.matAdy[posVert][i] = new Arista();
-            this.matAdy[i][posVert] = new Arista();
-        }
-    }
+//    public void borrarVertice(String vert) {
+//        int posVert = obtenerPos(vert);
+//        this.vertices[posVert] = null;
+//        this.cantidad--;
+//        for (int i = 0; i < this.tope; i++) {
+//            this.matAdy[posVert][i] = new AristaCompleja();
+//            this.matAdy[i][posVert] = new AristaCompleja();
+//        }
+//    }
 
     public boolean existeVertice(Object vert) {
         return obtenerPos(vert) != -1;
     }
 
     // existeVertice(origen) && existeVertice(destino) && !existeArista
-    public void agregarArista(String origen, String destino, int peso) {
-        //Implementar...
+    public void agregarArista(Object origen, Object destino, Object dato) {
         int posOrig = obtenerPos(origen);
         int posDest = obtenerPos(destino);
         this.matAdy[posOrig][posDest].setExiste(true);
-        this.matAdy[posOrig][posDest].setPeso(peso);
+        this.matAdy[posOrig][posDest].agregarALista(dato);
     }
 
     // existeVertice(origen) && existeVertice(destino)
@@ -125,7 +133,7 @@ public class Grafo<T> {
         //Implementar...
         int posOrig = obtenerPos(origen);
         int posDest = obtenerPos(destino);
-        this.matAdy[posOrig][posDest] = new Arista();
+        this.matAdy[posOrig][posDest] = new AristaCompleja();
     }
 
 //    public Lista<String> verticesAdyacentes(String vert) {
@@ -154,16 +162,6 @@ public class Grafo<T> {
 //        return retorno;
 //    }
 
-    private void imprimirMatrizAdy(){
-        for (int i = 0; i < this.tope; i++) {
-            String linea = "";
-            for (int j = 0; j < this.tope; j++) {
-                linea += " " + matAdy[i][j].getPeso();
-            }
-            System.out.println(" " + linea);
-        }
-    }
-
 
     public int getTope() {
         return tope;
@@ -173,7 +171,7 @@ public class Grafo<T> {
         return vertices;
     }
 
-    public Arista[][] getMatAdy() {
+    public AristaCompleja[][] getMatAdy() {
         return matAdy;
     }
 
@@ -192,7 +190,7 @@ public class Grafo<T> {
         String linea = "";
         for (int i = 0; i < this.tope; i++) {
             for (int j = 0; j < this.tope; j++) {
-                linea += " " + this.matAdy[i][j].getPeso();
+                linea += " " + this.matAdy[i][j].isExiste();
             }
             linea += "\n";
         }

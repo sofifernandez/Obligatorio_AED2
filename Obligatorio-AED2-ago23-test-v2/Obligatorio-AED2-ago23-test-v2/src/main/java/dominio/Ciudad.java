@@ -7,6 +7,11 @@ public class Ciudad implements Comparable<Ciudad> {
     private String codigo;
     private String nombre;
 
+    public Ciudad(){};
+
+    public Ciudad(String codigo){
+
+    }
     public Ciudad(String codigo, String nombre) {
         this.codigo = codigo;
         this.nombre = nombre;
