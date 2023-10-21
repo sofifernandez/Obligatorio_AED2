@@ -13,18 +13,14 @@ import sistema.auxiliares.TestViajeroDato;
 import static java.lang.String.format;
 import static sistema.AccionesPasajero.agregoElViajero;
 import static sistema.AccionesSistema.tengoUnSistemaValido;
-import static sistema.AuxAsserciones.checkearOk;
+import static sistema.AuxAsserciones.*;
 
 public class TestSistemaAFuturo {
-
-    @Test
-    public void testPruebas() {
-
-    }
+    Sistema s = new ImplementacionSistema();
 
     @Test
     public void testAFuturo() {
-        Sistema s = new ImplementacionSistema();
+
         Assertions.assertEquals(Retorno.ok(), s.inicializarSistema(500));
     }
 
@@ -37,7 +33,7 @@ public class TestSistemaAFuturo {
             new Ciudad("LOND02", "Londres"),
             new Ciudad("MADR4", "Madrid"),
             new Ciudad("PAR322", "París"),
-            new Ciudad("PRGUE5", "Praga"),
+
             new Ciudad("ROMA01", "Roma"),
             new Ciudad("VIENN6", "Viena")
     };
@@ -55,6 +51,7 @@ public class TestSistemaAFuturo {
     @Test
     public void testAgregarOk() {
         //dado que
+        s.inicializarSistema(10);
         Sistema s = tengoUnSistemaValido();
         for (int i = 0; i < CIUDADES_VALIDAS_ORDENADAS.length; i++) {
             Ciudad ciudad = CIUDADES_VALIDAS_ORDENADAS[i];
@@ -76,6 +73,8 @@ public class TestSistemaAFuturo {
 
     @Test
     public void testAgregarError3() {
+        testAgregarOk();
+        checkearError3(s.registrarCiudad("PRGUE5oo","Praga"),"Deberia haber dado error");
 
     }
 

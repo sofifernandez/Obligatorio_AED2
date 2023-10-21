@@ -1,15 +1,24 @@
 package estructuras.grafo;
 
+import dominio.Ciudad;
+import estructuras.tad.lista.ListaDinamica;
+
+import java.util.ArrayList;
+
 public class GrafoComplejo {
     private int tope;
     private int cantidad;
     private Object[] vertices; //ESTO NO SÉ SI VA ASÍ O CON <T>
+    private ListaDinamica verticesAdy;
     private AristaCompleja[][] matAdy;
+
+
 
     public GrafoComplejo(int unTope) {
         this.tope = unTope;
         this.cantidad = 0;
         this.vertices = new Object[this.tope];
+        this.verticesAdy = new ListaDinamica();
         this.matAdy = new AristaCompleja[this.tope][this.tope];
         for (int i = 0; i < this.tope; i++) {
             for (int j = 0; j < this.tope; j++) {
@@ -20,10 +29,15 @@ public class GrafoComplejo {
         //System.out.println(printmatrizAdy());
     }
 
+    public ListaDinamica getVerticesAdy() {
+        return verticesAdy;
+    }
+
     public GrafoComplejo(int unTope, boolean esDirigido) {
         this.tope = unTope;
         this.cantidad = 0;
         this.vertices = new Object[this.tope];
+        this.verticesAdy = new ListaDinamica();
         this.matAdy = new AristaCompleja[this.tope][this.tope];
         if (esDirigido) {
             for (int i = 0; i < this.tope; i++) {
@@ -77,10 +91,6 @@ public class GrafoComplejo {
         }
         return null;
     }
-
-
-
-
     // PRE: !esLleno && !existeVertice
     public void agregarVertice(Object vert) {
         int posLibre = obtenerPosLibre();
@@ -94,6 +104,27 @@ public class GrafoComplejo {
         int posDest = obtenerPos(destino);
         return this.matAdy[posOrig][posDest].existeEnLista(dato);
     }
+
+   public void dfs(Object obj,int cantidad){
+        boolean[] visitados = new boolean[this.cantidad];
+        int posOrigen = obtenerPos(obj);
+        dfs(posOrigen,visitados, cantidad);
+   }
+   private void dfs(int pos, boolean[] visitados, int cantidad) {
+       Object obj = this.vertices[pos];
+       verticesAdy.insertarOrdenado((Comparable) obj);
+       visitados[pos] = true;
+       ListaDinamica<Ciudad> vertAdyacentes = this.verticesAdyacentes(obj);
+       for (Object o : vertAdyacentes) {
+           int posAdy = this.obtenerPos(o);
+           if (visitados[posAdy] && cantidad > 0) {
+               dfs(posAdy, visitados, cantidad - 1);
+           }
+       }
+
+
+   }
+
 
 
 
@@ -121,8 +152,8 @@ public class GrafoComplejo {
     }
 
     // existeVertice(origen) && existeVertice(destino)
-    public boolean existerArista(String origen, String destino) {
-        //Implementar...
+    public boolean existeArista(String origen, String destino) {
+
         int posOrig = obtenerPos(origen);
         int posDest = obtenerPos(destino);
         return this.matAdy[posOrig][posDest].isExiste();
@@ -130,23 +161,22 @@ public class GrafoComplejo {
 
     // existeVertice(origen) && existeVertice(destino) && existeArista
     public void borrarArista(String origen, String destino) {
-        //Implementar...
         int posOrig = obtenerPos(origen);
         int posDest = obtenerPos(destino);
         this.matAdy[posOrig][posDest] = new AristaCompleja();
     }
 
-//    public Lista<String> verticesAdyacentes(String vert) {
-//        Lista<String> retorno = new ListaImp<>();
-//        int posVert = obtenerPos(vert);
-//        for (int i = 0; i < this.tope; i++) {
-//            if (this.matAdy[posVert][i].isExiste()) {
-//                retorno.insertar(this.vertices[i]);
-//            }
-//        }
-//        //Implementar...
-//        return retorno;
-//    }
+    public ListaDinamica verticesAdyacentes(Object vert) {
+        ListaDinamica retorno = new ListaDinamica();
+        int posVert = obtenerPos(vert);
+        for (int i = 0; i < this.tope; i++) {
+            if (this.matAdy[posVert][i].isExiste()) {
+                retorno.insertar((Comparable) this.vertices[i]);
+            }
+        }
+
+        return retorno;
+    }
 
     // Pre: existeVertice(vert)
 
@@ -161,6 +191,7 @@ public class GrafoComplejo {
 //        //Implementar...
 //        return retorno;
 //    }
+
 
 
     public int getTope() {

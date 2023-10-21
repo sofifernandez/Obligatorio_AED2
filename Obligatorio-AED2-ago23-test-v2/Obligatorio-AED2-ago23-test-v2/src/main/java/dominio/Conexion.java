@@ -47,10 +47,15 @@ public class Conexion {
         return idConexion;
     }
 
-    public void setIdConexion(int idConexion) {
+    /*public void setIdConexion(int idConexion) { Asi no se puede cambiar el ID, solo cuando se lo asigna en el constructor
         this.idConexion = idConexion;
-    }
+    }*/
 
+    public void editar(double costo, double tiempo, TipoConexion tipo){
+        this.setCosto(costo);
+        this.setTiempo(tiempo);
+        this.setTipo(tipo);
+    }
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

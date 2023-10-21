@@ -33,14 +33,7 @@ public class Ciudad implements Comparable<Ciudad> {
         this.nombre = nombre;
     }
 
-    public boolean esValidoCodigo(String codigo){ //Esto se puede hacer con exp Regulares pero no las manejo bien
-//        if (codigo.length()< 5){
-//            return false;
-//        }
-//        for (char c: codigo.toCharArray()){
-//            if (!Character.isUpperCase(c) && !Character.isDigit(c)) return false;
-//        }
-//        return true;
+    public boolean esValidoCodigo(String codigo){
         String regex = "^[A-Z0-9]{5,}$";
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(codigo);
@@ -63,9 +56,6 @@ public class Ciudad implements Comparable<Ciudad> {
 
     @Override
     public String toString() {
-        return "Ciudad{" +
-                "codigo='" + codigo + '\'' +
-                ", nombre='" + nombre + '\'' +
-                '}';
+        return this.getCodigo() + ";" + this.getNombre(); //Asi lo pide en el metodo 10
     }
 }

@@ -3,6 +3,7 @@ package estructuras.tad.lista;
 public interface Lista<T extends Comparable<T>> extends Iterable<T> {
 
     void insertar(T dato);
+    public void insertarOrdenado(T valor);
     void borrar(T dato);
     int largo();
     boolean existe(T dato);
@@ -10,6 +11,7 @@ public interface Lista<T extends Comparable<T>> extends Iterable<T> {
     boolean esVacia();
     boolean esLlena();
     void imprimirDatos();
+    public String obtenerTodosComoString();
 
     /**
      * Ejercicio 3 - Parte B

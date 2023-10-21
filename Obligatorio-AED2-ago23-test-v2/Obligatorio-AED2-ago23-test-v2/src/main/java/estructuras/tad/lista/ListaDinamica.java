@@ -1,11 +1,5 @@
 package estructuras.tad.lista;
 
-
-
-
-
-
-
 import java.util.Iterator;
 
 public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
@@ -22,6 +16,22 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
     public void insertar(T dato) {
         inicio = new NodoLista<T>(dato, inicio);
         largo++;
+    }
+
+    public void insertarOrdenado(T valor) {
+        NodoLista<T> nuevoNodo = new NodoLista<>(valor);
+
+        if (inicio == null || valor.compareTo(inicio.getDato()) < 0) {
+            nuevoNodo.setSig(inicio);
+            inicio = nuevoNodo;
+        } else {
+            NodoLista<T> actual = inicio;
+            while (actual.getSig() != null && valor.compareTo(actual.getSig().getDato()) >= 0) {
+                actual = actual.getSig();
+            }
+            nuevoNodo.setSig(actual.getSig());
+            actual.setSig(nuevoNodo);
+        }
     }
 
     @Override
@@ -89,6 +99,20 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
             aux = aux.getSig();
         }
         System.out.println();
+    }
+
+    @Override
+    public String obtenerTodosComoString() {
+        StringBuilder resultado = new StringBuilder();
+        NodoLista<T> actual = inicio;
+
+        while (actual != null) {
+            resultado.append(actual.getDato().toString());
+            resultado.append(" ");
+            actual = actual.getSig();
+        }
+
+        return resultado.toString();
     }
 
     /**

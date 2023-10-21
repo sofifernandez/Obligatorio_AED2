@@ -6,9 +6,12 @@ import dominio.Viajero;
 import estructuras.arbol.ABBImp;
 import estructuras.grafo.Grafo;
 import estructuras.grafo.GrafoComplejo;
+import estructuras.tad.lista.ListaDinamica;
 import interfaz.*;
 
 import java.sql.SQLOutput;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -144,23 +147,47 @@ public class ImplementacionSistema implements Sistema {
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
         if(!origen.esValidoCodigo(codigoCiudadOrigen) || destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
         Conexion nuevaConexion = new Conexion(identificadorConexion,costo, tiempo, tipo);
-        if( grafoCiudades.existeDatoEnArista(origen,destino,nuevaConexion)) return Retorno.error5("Ya existe conexión con ese identificador");
+        if( grafoCiudades.existeDatoEnArista(origen,destino,nuevaConexion)) return Retorno.error6("Ya existe conexión con ese identificador");
         grafoCiudades.agregarArista(origen,destino,nuevaConexion);
         return Retorno.ok();
     }
 
     @Override
     public Retorno actualizarConexion(String codigoCiudadOrigen, String codigoCiudadDestino, int identificadorConexion, double costo, double tiempo, TipoConexion tipo) {
-        return Retorno.noImplementada();
+        if(costo<=0 || tiempo<=0) return Retorno.error1("Completar costo y tiempo de la conexión");
+        if(esVacioONulo(codigoCiudadOrigen) || esVacioONulo(codigoCiudadDestino) || tipo==null) return Retorno.error2("Los campos son obligatorios");
+        Ciudad origen =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadOrigen));
+        Ciudad destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
+        if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
+        if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
+        if(!origen.esValidoCodigo(codigoCiudadOrigen) || destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
+        Conexion nuevaConexion = new Conexion(identificadorConexion,costo, tiempo, tipo);
+        if(!grafoCiudades.existeDatoEnArista(origen,destino,nuevaConexion)) return Retorno.error6("No existe conexión con ese identificador");
+        nuevaConexion.editar(costo, tiempo, tipo);
+        return Retorno.ok();
     }
 
     @Override
     public Retorno listadoCiudadesCantTrasbordos(String codigo, int cantidad) {
-        return Retorno.noImplementada();
+        if(cantidad < 0) return Retorno.error1("La cantidad de transbordos no puede ser menor que cero");
+        if (esVacioONulo(codigo)) return Retorno.error1("Los campos son obligatorios");
+        Ciudad ciudad =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigo));
+        if(ciudad==null) return Retorno.error4("La ciudad no existe en el sistema");
+        if (ciudad.esValidoCodigo(codigo)) return Retorno.error3("Codigo de la ciudad invalido");
+        grafoCiudades.dfs(ciudad,cantidad);
+        return Retorno.ok(grafoCiudades.getVerticesAdy().obtenerTodosComoString());
     }
 
     @Override
     public Retorno viajeCostoMinimo(String codigoCiudadOrigen, String codigoCiudadDestino) {
+        if(esVacioONulo(codigoCiudadOrigen) || esVacioONulo(codigoCiudadDestino)) return Retorno.error1("Los campos son obligatorios");
+        Ciudad origen =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadOrigen));
+        Ciudad destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
+        if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
+        if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
+        if(!origen.esValidoCodigo(codigoCiudadOrigen) || destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error2("Los códigos de la ciudades no tienen el formato adecuado");
+
+
         return Retorno.noImplementada();
     }
 
