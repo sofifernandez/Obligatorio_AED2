@@ -8,6 +8,17 @@ public class ListaEstatica<T extends Comparable<T>> implements Lista<T > {
     private final T[] array;
     private int cantElementos;
     private final int tamanio;
+
+    @Override
+    public void insertarOrdenado(T valor) {
+
+    }
+
+    @Override
+    public String obtenerTodosComoString() {
+        return null;
+    }
+
     private int indice;
 
     public ListaEstatica(Class<T> clase, int tamanio) {

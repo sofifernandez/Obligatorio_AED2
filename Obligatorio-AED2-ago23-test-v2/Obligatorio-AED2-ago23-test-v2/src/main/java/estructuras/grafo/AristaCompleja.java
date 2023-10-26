@@ -35,4 +35,8 @@ public class AristaCompleja {
     public boolean existeEnLista(Object obj){
         return lista.existe((Comparable) obj);
     }
+
+    public Object datoEnLista(Object obj){
+        return lista.recuperar((Comparable) obj);
+    }
 }

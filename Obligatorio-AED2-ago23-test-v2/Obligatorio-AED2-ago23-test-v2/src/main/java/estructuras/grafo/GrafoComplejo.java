@@ -99,30 +99,36 @@ public class GrafoComplejo {
         this.cantidad++;
     }
 
+    public Object obtenerDatoEnArista(Object origen, Object destino, Object dato) {
+        int posOrig = obtenerPos(origen);
+        int posDest = obtenerPos(destino);
+        return this.matAdy[posOrig][posDest].datoEnLista(dato);
+    }
+
     public boolean existeDatoEnArista(Object origen, Object destino, Object dato) {
         int posOrig = obtenerPos(origen);
         int posDest = obtenerPos(destino);
         return this.matAdy[posOrig][posDest].existeEnLista(dato);
     }
 
-   public void dfs(Object obj,int cantidad){
+   public ListaDinamica dfs(Object obj,int cantidad){
         boolean[] visitados = new boolean[this.cantidad];
         int posOrigen = obtenerPos(obj);
-        dfs(posOrigen,visitados, cantidad);
+        ListaDinamica verticesRecorridos = new ListaDinamica();
+        dfs(posOrigen,visitados, cantidad, verticesRecorridos);
+        return verticesRecorridos;
    }
-   private void dfs(int pos, boolean[] visitados, int cantidad) {
+   private void dfs(int pos, boolean[] visitados, int cantidad, ListaDinamica verticesRecorridos) {
        Object obj = this.vertices[pos];
-       verticesAdy.insertarOrdenado((Comparable) obj);
+       verticesRecorridos.insertarOrdenado((Comparable) obj);
        visitados[pos] = true;
        ListaDinamica<Ciudad> vertAdyacentes = this.verticesAdyacentes(obj);
        for (Object o : vertAdyacentes) {
            int posAdy = this.obtenerPos(o);
            if (visitados[posAdy] && cantidad > 0) {
-               dfs(posAdy, visitados, cantidad - 1);
+               dfs(posAdy, visitados, cantidad - 1, verticesRecorridos);
            }
        }
-
-
    }
 
 

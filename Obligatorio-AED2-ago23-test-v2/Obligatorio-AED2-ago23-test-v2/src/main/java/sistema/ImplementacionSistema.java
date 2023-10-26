@@ -30,7 +30,7 @@ public class ImplementacionSistema implements Sistema {
             arbolPremium=new ABBImp();
             arbolEstandar=new ABBImp();
             arbolCasual=new ABBImp();
-            grafoCiudades= new GrafoComplejo(maxCiudades);
+            grafoCiudades= new GrafoComplejo(maxCiudades, true);
             return Retorno.ok();
         }
         return Retorno.error1("El sistema debe tener más de 5 ciudades");
@@ -161,8 +161,8 @@ public class ImplementacionSistema implements Sistema {
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
         if(!origen.esValidoCodigo(codigoCiudadOrigen) || destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
-        Conexion nuevaConexion = new Conexion(identificadorConexion,costo, tiempo, tipo);
-        if(!grafoCiudades.existeDatoEnArista(origen,destino,nuevaConexion)) return Retorno.error6("No existe conexión con ese identificador");
+        Conexion nuevaConexion = (Conexion) grafoCiudades.obtenerDatoEnArista(origen,destino,new Conexion(identificadorConexion,costo, tiempo, tipo));
+        if(nuevaConexion==null) return Retorno.error6("No existe conexión con ese identificador");
         nuevaConexion.editar(costo, tiempo, tipo);
         return Retorno.ok();
     }
@@ -174,8 +174,7 @@ public class ImplementacionSistema implements Sistema {
         Ciudad ciudad =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigo));
         if(ciudad==null) return Retorno.error4("La ciudad no existe en el sistema");
         if (ciudad.esValidoCodigo(codigo)) return Retorno.error3("Codigo de la ciudad invalido");
-        grafoCiudades.dfs(ciudad,cantidad);
-        return Retorno.ok(grafoCiudades.getVerticesAdy().obtenerTodosComoString());
+        return Retorno.ok(grafoCiudades.dfs(ciudad,cantidad).obtenerTodosComoString());
     }
 
     @Override

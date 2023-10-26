@@ -103,16 +103,15 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
 
     @Override
     public String obtenerTodosComoString() {
-        StringBuilder resultado = new StringBuilder();
+        String resultado = "";
         NodoLista<T> actual = inicio;
 
         while (actual != null) {
-            resultado.append(actual.getDato().toString());
-            resultado.append(" ");
+            resultado = resultado + (actual.getDato().toString()) + "| ";
             actual = actual.getSig();
         }
 
-        return resultado.toString();
+        return resultado;
     }
 
     /**

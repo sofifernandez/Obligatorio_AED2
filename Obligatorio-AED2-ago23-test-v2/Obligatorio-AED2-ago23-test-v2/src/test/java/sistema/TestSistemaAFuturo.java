@@ -73,7 +73,7 @@ public class TestSistemaAFuturo {
 
     @Test
     public void testAgregarError3() {
-        testAgregarOk();
+        s.inicializarSistema(10);
         checkearError3(s.registrarCiudad("PRGUE5oo","Praga"),"Deberia haber dado error");
 
     }
