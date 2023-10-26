@@ -120,13 +120,14 @@ public class GrafoComplejo {
    }
    private void dfs(int pos, boolean[] visitados, int cantidad, ListaDinamica verticesRecorridos) {
        Object obj = this.vertices[pos];
+       System.out.println(obj);
        verticesRecorridos.insertarOrdenado((Comparable) obj);
        visitados[pos] = true;
-       ListaDinamica<Ciudad> vertAdyacentes = this.verticesAdyacentes(obj);
+       ListaDinamica vertAdyacentes = this.verticesAdyacentes(obj);
        for (Object o : vertAdyacentes) {
            int posAdy = this.obtenerPos(o);
-           if (visitados[posAdy] && cantidad > 0) {
-               dfs(posAdy, visitados, cantidad - 1, verticesRecorridos);
+           if (!visitados[posAdy] && cantidad > 0) {
+               dfs (posAdy, visitados, cantidad - 1, verticesRecorridos);
            }
        }
    }

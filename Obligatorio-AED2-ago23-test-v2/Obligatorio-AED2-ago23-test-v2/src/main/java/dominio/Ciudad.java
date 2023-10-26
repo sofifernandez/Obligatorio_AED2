@@ -13,7 +13,8 @@ public class Ciudad implements Comparable<Ciudad> {
     ;
 
     public Ciudad(String codigo) {
-
+        this.codigo = codigo;
+        this.nombre = "";
     }
 
     public Ciudad(String codigo, String nombre) {
@@ -54,7 +55,7 @@ public class Ciudad implements Comparable<Ciudad> {
         if (this == o) return true;
         if (o == null || this.getClass() != o.getClass()) return false;
         Ciudad ciudad = (Ciudad) o;
-        return ciudad.codigo.equals(this.codigo);
+        return ciudad.getCodigo().equals(this.codigo);
     }
 
     @Override

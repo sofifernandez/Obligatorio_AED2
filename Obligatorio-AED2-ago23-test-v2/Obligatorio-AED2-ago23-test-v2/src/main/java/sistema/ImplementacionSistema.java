@@ -88,6 +88,7 @@ public class ImplementacionSistema implements Sistema {
         if(lista.length()>0){
             lista= lista.substring(0, lista.length()-1);
         }
+
         return Retorno.ok(lista);
 
     }
@@ -98,6 +99,7 @@ public class ImplementacionSistema implements Sistema {
        if(lista.length()>0){
            lista= lista.substring(1, lista.length());
        }
+
         return Retorno.ok(lista);
     }
 
@@ -109,14 +111,23 @@ public class ImplementacionSistema implements Sistema {
         switch (indice) {
             case 0:
                 lista=arbolPremium.listarAscendente();
+                if(lista.length()>0){
+                    lista= lista.substring(0, lista.length()-1);
+                }
                 return Retorno.ok(lista);
 
             case 1:
                 lista=arbolEstandar.listarAscendente();
+                if(lista.length()>0){
+                    lista= lista.substring(0, lista.length()-1);
+                }
                 return Retorno.ok(lista);
 
             case 2:
                 lista= arbolCasual.listarAscendente();
+                if(lista.length()>0){
+                    lista= lista.substring(0, lista.length()-1);
+                }
                 return Retorno.ok(lista);
             default:
                 System.out.println("El número no coincide con ningún caso.");
@@ -141,11 +152,14 @@ public class ImplementacionSistema implements Sistema {
     public Retorno registrarConexion(String codigoCiudadOrigen, String codigoCiudadDestino, int identificadorConexion, double costo, double tiempo, TipoConexion tipo) {
         if(costo<=0 || tiempo<=0) return Retorno.error1("Completar costo y tiempo de la conexión");
         if(esVacioONulo(codigoCiudadOrigen) || esVacioONulo(codigoCiudadDestino) || tipo==null) return Retorno.error2("Los campos son obligatorios");
-        Ciudad origen =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadOrigen));
-        Ciudad destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
+        Ciudad origen = new Ciudad(codigoCiudadOrigen);
+        Ciudad destino =new Ciudad(codigoCiudadDestino);
+        if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
+        origen =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadOrigen));
+        destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
-        if(!origen.esValidoCodigo(codigoCiudadOrigen) || destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
+        if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
         Conexion nuevaConexion = new Conexion(identificadorConexion,costo, tiempo, tipo);
         if( grafoCiudades.existeDatoEnArista(origen,destino,nuevaConexion)) return Retorno.error6("Ya existe conexión con ese identificador");
         grafoCiudades.agregarArista(origen,destino,nuevaConexion);
@@ -156,11 +170,14 @@ public class ImplementacionSistema implements Sistema {
     public Retorno actualizarConexion(String codigoCiudadOrigen, String codigoCiudadDestino, int identificadorConexion, double costo, double tiempo, TipoConexion tipo) {
         if(costo<=0 || tiempo<=0) return Retorno.error1("Completar costo y tiempo de la conexión");
         if(esVacioONulo(codigoCiudadOrigen) || esVacioONulo(codigoCiudadDestino) || tipo==null) return Retorno.error2("Los campos son obligatorios");
-        Ciudad origen =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadOrigen));
-        Ciudad destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
+        Ciudad origen = new Ciudad(codigoCiudadOrigen);
+        Ciudad destino =new Ciudad(codigoCiudadDestino);
+        if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
+        origen =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadOrigen));
+        destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
-        if(!origen.esValidoCodigo(codigoCiudadOrigen) || destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
+        if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
         Conexion nuevaConexion = (Conexion) grafoCiudades.obtenerDatoEnArista(origen,destino,new Conexion(identificadorConexion,costo, tiempo, tipo));
         if(nuevaConexion==null) return Retorno.error6("No existe conexión con ese identificador");
         nuevaConexion.editar(costo, tiempo, tipo);
@@ -170,10 +187,11 @@ public class ImplementacionSistema implements Sistema {
     @Override
     public Retorno listadoCiudadesCantTrasbordos(String codigo, int cantidad) {
         if(cantidad < 0) return Retorno.error1("La cantidad de transbordos no puede ser menor que cero");
-        if (esVacioONulo(codigo)) return Retorno.error1("Los campos son obligatorios");
-        Ciudad ciudad =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigo));
+        if (esVacioONulo(codigo)) return Retorno.error2("Los campos son obligatorios");
+        Ciudad ciudad = new Ciudad(codigo);
+        if (!ciudad.esValidoCodigo(codigo)) return Retorno.error3("Codigo de la ciudad invalido");
+        ciudad =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigo));
         if(ciudad==null) return Retorno.error4("La ciudad no existe en el sistema");
-        if (ciudad.esValidoCodigo(codigo)) return Retorno.error3("Codigo de la ciudad invalido");
         return Retorno.ok(grafoCiudades.dfs(ciudad,cantidad).obtenerTodosComoString());
     }
 

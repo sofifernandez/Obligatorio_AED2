@@ -107,11 +107,11 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
         NodoLista<T> actual = inicio;
 
         while (actual != null) {
-            resultado = resultado + (actual.getDato().toString()) + "| ";
+            resultado = resultado + (actual.getDato().toString()) + "|";
             actual = actual.getSig();
         }
 
-        return resultado;
+        return resultado.substring(0,resultado.length()-1);
     }
 
     /**

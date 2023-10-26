@@ -4,7 +4,7 @@ import interfaz.TipoConexion;
 
 import java.util.Objects;
 
-public class Conexion {
+public class Conexion implements Comparable<Conexion> {
     private int idConexion;
     private double costo;
     private double tiempo;
@@ -67,5 +67,10 @@ public class Conexion {
     @Override
     public int hashCode() {
         return Objects.hash(idConexion);
+    }
+
+    @Override
+    public int compareTo(Conexion o) {
+        return 0;
     }
 }

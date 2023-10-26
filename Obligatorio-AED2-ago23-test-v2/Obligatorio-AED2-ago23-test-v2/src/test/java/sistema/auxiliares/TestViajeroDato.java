@@ -1,15 +1,12 @@
 package sistema.auxiliares;
 
-import dominio.Viajero;
 import interfaz.TipoViajero;
 
-import java.sql.SQLOutput;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.logging.Logger;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
-public class TestViajeroDato implements Comparable<TestViajeroDato> {
+public class TestViajeroDato {
     private String cedula;
     private String nombre;
     private int edad;
@@ -21,8 +18,6 @@ public class TestViajeroDato implements Comparable<TestViajeroDato> {
         this.edad = edad;
         this.tipoViajero = tipoViajero;
     }
-
-
 
     public String getCedula() {
         return cedula;
@@ -53,12 +48,15 @@ public class TestViajeroDato implements Comparable<TestViajeroDato> {
     public static TestViajeroDato fromString(String resultado){
         try {
             String[] partes = resultado.split(";");
-            return new TestViajeroDato(partes[0],partes[1],Integer.parseInt(partes[2]),TipoViajero.valueOf(partes[3]));
+            return new TestViajeroDato(partes[0],partes[1],Integer.parseInt(partes[2]),obtenerTipoViajero(partes[3]));
         }catch (Exception e){
-            System.out.println(e.toString());
             Logger.getLogger(TestViajeroDato.class.getCanonicalName()).warning("No pude leer el viajero: '"+resultado+"'");
             return null;
         }
+    }
+
+    private static TipoViajero obtenerTipoViajero(String texto) {
+        return Arrays.stream(TipoViajero.values()).filter(v->v.getTexto().equalsIgnoreCase(texto)).findFirst().orElse(null);
     }
 
     public TestViajeroDato copia() {
@@ -68,19 +66,13 @@ public class TestViajeroDato implements Comparable<TestViajeroDato> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        //if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) return false;
         TestViajeroDato that = (TestViajeroDato) o;
-        //return edad == that.edad && Objects.equals(cedula, that.cedula) && Objects.equals(nombre, that.nombre) && tipoViajero == that.tipoViajero;
-        return edad == that.edad && Objects.equals(cedula, that.cedula) && Objects.equals(nombre, that.nombre);
+        return edad == that.edad && Objects.equals(cedula, that.cedula) && Objects.equals(nombre, that.nombre) && tipoViajero == that.tipoViajero;
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(cedula, nombre, edad, tipoViajero);
-    }
-
-    @Override
-    public int compareTo(TestViajeroDato o) {
-        return this.cedula.compareTo(o.getCedula());
     }
 }
