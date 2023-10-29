@@ -11,8 +11,9 @@ public interface Lista<T extends Comparable<T>> extends Iterable<T> {
     boolean esVacia();
     boolean esLlena();
     void imprimirDatos();
-    public String obtenerTodosComoString();
+    String obtenerTodosComoString();
 
+    Object obtenerMenor();
     /**
      * Ejercicio 3 - Parte B
      */

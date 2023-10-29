@@ -5,6 +5,11 @@ import java.util.Iterator;
 
 public class ListaEstatica<T extends Comparable<T>> implements Lista<T > {
 
+    @Override
+    public Object obtenerMenor() {
+        return null;
+    }
+
     private final T[] array;
     private int cantElementos;
     private final int tamanio;

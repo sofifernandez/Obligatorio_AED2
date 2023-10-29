@@ -114,6 +114,24 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
         return resultado.substring(0,resultado.length()-1);
     }
 
+    @Override
+    public T obtenerMenor() {
+        if (inicio == null) {
+            return null;
+        }
+
+        NodoLista<T> actual = inicio;
+        T menor = inicio.getDato();
+
+        while (actual != null) {
+            if (actual.getDato().compareTo(menor) < 0) {
+                menor = actual.getDato();
+            }
+            actual = actual.getSig();
+        }
+
+        return menor;
+    }
     /**
      * Ejercicio 3 - Parte B
      */

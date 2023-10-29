@@ -198,14 +198,18 @@ public class ImplementacionSistema implements Sistema {
     @Override
     public Retorno viajeCostoMinimo(String codigoCiudadOrigen, String codigoCiudadDestino) {
         if(esVacioONulo(codigoCiudadOrigen) || esVacioONulo(codigoCiudadDestino)) return Retorno.error1("Los campos son obligatorios");
-        Ciudad origen =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadOrigen));
-        Ciudad destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
+        Ciudad origen = new Ciudad(codigoCiudadOrigen);
+        Ciudad destino =new Ciudad(codigoCiudadDestino);
+        if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error2("Los códigos de la ciudades no tienen el formato adecuado");
+        origen =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadOrigen));
+        destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
-        if(!origen.esValidoCodigo(codigoCiudadOrigen) || destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error2("Los códigos de la ciudades no tienen el formato adecuado");
+        if (!grafoCiudades.existeCamino(origen,destino)) return Retorno.error3("La ciudad de origen no existe en el sistema");
 
-
-        return Retorno.noImplementada();
+        //Por lo que dan los test, el valorEntero lo devuelve bien, siempre coincide con el resultado del test
+        //Lo que falta es el valorString, por eso los muestra con error.
+        return Retorno.ok(grafoCiudades.dijkstra(origen,destino));
     }
 
     /////////////////////////////////////////////////////////////

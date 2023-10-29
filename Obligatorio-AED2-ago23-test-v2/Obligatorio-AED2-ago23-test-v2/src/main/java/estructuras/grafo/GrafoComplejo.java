@@ -1,6 +1,7 @@
 package estructuras.grafo;
 
 import dominio.Ciudad;
+import dominio.Conexion;
 import estructuras.tad.lista.ListaDinamica;
 
 import java.util.ArrayList;
@@ -131,7 +132,78 @@ public class GrafoComplejo {
            }
        }
    }
+    public boolean existeCamino(Object inicio, Object destino) {
+        boolean[] visitados = new boolean[tope];
+        int posI = this.obtenerPos(inicio);
+        int posD = this.obtenerPos(destino);
+        if (posI >= 0 && posD >= 0) return existeCaminoDFS(this.obtenerPos(inicio), this.obtenerPos(destino), visitados);
+        return false;
+    }
+    private boolean existeCaminoDFS(int pos, int destino, boolean[] visitados) {
+        visitados[pos] = true;
+        if (pos == destino) {
+            return true;
+        }
+        for (int i = 0; i < this.tope; i++) {
+            if (!visitados[i] && matAdy[pos][i].isExiste()) {
+                if (existeCaminoDFS(i, destino, visitados)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 
+
+
+    public int dijkstra(Object vOrigen, Object vDest) {
+        int posOrigen = this.obtenerPos(vOrigen);
+        int posDest = this.obtenerPos(vDest);
+
+        boolean[] visitados = new boolean[this.tope]; //Ya lo inicializa en falso
+        Object[] anteriores = new Object[this.tope];
+        int[] costos = new int[this.tope];
+
+        //Inicializar las estructuras
+        for (int i = 0; i < this.tope; i++) {
+            costos[i] = Integer.MAX_VALUE;
+            anteriores[i] = "**";
+        }
+        costos[posOrigen] = 0;
+        //recorriendo vertices no visitados y obteniendo el menor
+        for (int v = 0; v < this.cantidad; v++) {
+            int pos = this.obtenerPosMenorVerticeNoVisitado(costos, visitados);
+            if (pos > -1) {
+                visitados[pos] = true;
+                //Evaluar adyacentes y ver si actualizabamos costos
+                for (int j = 0; j < this.tope; j++) {
+                    if (matAdy[pos][j].isExiste() && !visitados[j]) {
+                        //Esto habria que hacerlo en algun otro lugar porque deja de ser generico
+                        Conexion conexionMinima = (Conexion) matAdy[pos][j].getLista().obtenerMenor(); //Aca me deberia quedar con la conexion minima de la arista
+                        int costoNuevo = costos[pos] + (int)conexionMinima.getTiempo();
+                        if (costoNuevo < costos[j]) {
+                            costos[j] = costoNuevo;
+                            anteriores[j] = vertices[pos];
+                        }
+                    }
+                }
+            }
+        }
+
+        return costos[posDest];
+    }
+
+    private int obtenerPosMenorVerticeNoVisitado(int[] costos, boolean[] visitados) {
+        int posMin = -1;
+        int min = Integer.MAX_VALUE;
+        for (int i = 0; i < this.tope; i++) {
+            if (!visitados[i] && costos[i] < min) {
+                min = costos[i];
+                posMin = i;
+            }
+        }
+        return posMin;
+    }
 
 
 
@@ -159,7 +231,7 @@ public class GrafoComplejo {
     }
 
     // existeVertice(origen) && existeVertice(destino)
-    public boolean existeArista(String origen, String destino) {
+    public boolean existeArista(Object origen, Object destino) {
 
         int posOrig = obtenerPos(origen);
         int posDest = obtenerPos(destino);
