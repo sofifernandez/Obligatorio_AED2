@@ -6,13 +6,8 @@ import dominio.Viajero;
 import estructuras.arbol.ABBImp;
 import estructuras.grafo.Grafo;
 import estructuras.grafo.GrafoComplejo;
-import estructuras.tad.lista.ListaDinamica;
 import interfaz.*;
 
-import java.sql.SQLOutput;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -207,7 +202,7 @@ public class ImplementacionSistema implements Sistema {
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
         if (!grafoCiudades.existeCamino(origen,destino)) return Retorno.error3("No existe ruta para conectar las ciudades");
-
+/*
         //Por lo que dan los test, el valorEntero lo devuelve bien, siempre coincide con el resultado del test
         //Lo que falta es el valorString, por eso los muestra con error.
         Function<Conexion, Integer> costExtractor = conexion -> (int) conexion.getTiempo();
@@ -218,6 +213,11 @@ public class ImplementacionSistema implements Sistema {
         String resultadoString= (String) resultado[1];
         //System.out.println(resultadoString);
         //System.out.println(grafoCiudades.verticesAdyacentes(origen));
+        return Retorno.ok(resultadoInt,resultadoString);*/
+
+        Object[] resultado = grafoCiudades.dijkstraConCaminoYCosto(origen, destino);
+        int resultadoInt = (int) resultado[0] ;
+        String resultadoString= (String) resultado[1];
         return Retorno.ok(resultadoInt,resultadoString);
     }
 
