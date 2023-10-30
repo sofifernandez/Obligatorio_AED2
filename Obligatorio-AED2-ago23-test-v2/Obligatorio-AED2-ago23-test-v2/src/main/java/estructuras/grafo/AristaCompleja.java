@@ -2,7 +2,7 @@ package estructuras.grafo;
 
 import estructuras.tad.lista.ListaDinamica;
 
-public class AristaCompleja {
+public class AristaCompleja<T> {
 
     private boolean existe;
     private ListaDinamica lista;
@@ -38,5 +38,9 @@ public class AristaCompleja {
 
     public Object datoEnLista(Object obj){
         return lista.recuperar((Comparable) obj);
+    }
+
+    public T menorDeLaLista(){
+         return (T) this.lista.obtenerMenor();
     }
 }

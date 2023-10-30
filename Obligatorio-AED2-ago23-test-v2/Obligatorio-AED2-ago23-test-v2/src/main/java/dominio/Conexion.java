@@ -77,4 +77,9 @@ public class Conexion implements Comparable<Conexion> {
         return 0;
         //return Double.compare(o.getTiempo(), this.getTiempo());
     }
+
+    @Override
+    public String toString() {
+        return tipo.toString();
+    }
 }

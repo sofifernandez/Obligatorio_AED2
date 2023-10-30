@@ -1,12 +1,14 @@
 package estructuras.grafo;
 
-import dominio.Ciudad;
-import dominio.Conexion;
+
+//import dominio.Conexion;
 import estructuras.tad.lista.ListaDinamica;
+import estructuras.tad.lista.ListaEnterosDinamica;
 
 import java.util.ArrayList;
+import java.util.function.Function;
 
-public class GrafoComplejo {
+public class GrafoComplejo<T> {
     private int tope;
     private int cantidad;
     private Object[] vertices; //ESTO NO SÉ SI VA ASÍ O CON <T>
@@ -95,7 +97,6 @@ public class GrafoComplejo {
     // PRE: !esLleno && !existeVertice
     public void agregarVertice(Object vert) {
         int posLibre = obtenerPosLibre();
-        System.out.println(posLibre);
         this.vertices[posLibre] = vert;
         this.cantidad++;
     }
@@ -121,7 +122,6 @@ public class GrafoComplejo {
    }
    private void dfs(int pos, boolean[] visitados, int cantidad, ListaDinamica verticesRecorridos) {
        Object obj = this.vertices[pos];
-       System.out.println(obj);
        verticesRecorridos.insertarOrdenado((Comparable) obj);
        visitados[pos] = true;
        ListaDinamica vertAdyacentes = this.verticesAdyacentes(obj);
@@ -155,13 +155,18 @@ public class GrafoComplejo {
     }
 
 
+    public Object[] dijkstra(Object vOrigen, Object vDest, Function<T, Integer>costExtractor) {
+        Object[] result = new Object[2];
+        String resultadoTexto="";
 
-    public int dijkstra(Object vOrigen, Object vDest) {
+        ListaDinamica camino= new ListaDinamica<>();
         int posOrigen = this.obtenerPos(vOrigen);
         int posDest = this.obtenerPos(vDest);
 
-        boolean[] visitados = new boolean[this.tope]; //Ya lo inicializa en falso
+        boolean[] visitados = new boolean[this.tope];
         Object[] anteriores = new Object[this.tope];
+        String[] prueba =new String[this.tope];
+        int[] posAnteriores= new int[this.tope];
         int[] costos = new int[this.tope];
 
         //Inicializar las estructuras
@@ -178,20 +183,51 @@ public class GrafoComplejo {
                 //Evaluar adyacentes y ver si actualizabamos costos
                 for (int j = 0; j < this.tope; j++) {
                     if (matAdy[pos][j].isExiste() && !visitados[j]) {
-                        //Esto habria que hacerlo en algun otro lugar porque deja de ser generico
-                        Conexion conexionMinima = (Conexion) matAdy[pos][j].getLista().obtenerMenor(); //Aca me deberia quedar con la conexion minima de la arista
-                        int costoNuevo = costos[pos] + (int)conexionMinima.getTiempo();
+
+                        //DE ESTA FORMA NO ES GENÉRICO
+                        //Conexion conexionMinima = (Conexion) matAdy[pos][j].getLista().obtenerMenor(); //Aca me deberia quedar con la conexion minima de la arista
+                        //int costoNuevo = costos[pos] + (int)conexionMinima.getTiempo();
+
+                        //DE ESTA FORMA ES GENÉRICO, PERO HUBO QUE AGREGARLE <T> A TODAS LAS CLASES
+
+                        T aristaMenor= (T) matAdy[pos][j].menorDeLaLista();
+                        int costoNuevo = costos[pos] + costExtractor.apply(aristaMenor);
                         if (costoNuevo < costos[j]) {
                             costos[j] = costoNuevo;
                             anteriores[j] = vertices[pos];
+                            posAnteriores[j]=pos;
+                            prueba[j] =vertices[pos]+ "|"+ aristaMenor +"|";
+                            //prueba[j]=vertices[pos].toString();
                         }
+                        resultadoTexto+=vertices[j]+ "|"+aristaMenor +"|";
                     }
                 }
             }
         }
 
-        return costos[posDest];
+
+
+
+
+        for (int x=0;x<this.cantidad;x++){
+            System.out.println(x +" "+vertices[x]+" " + costos[x] + "<-- " + anteriores[x] + " " +posAnteriores[x]);
+            System.out.println(x +" "+prueba[x]);
+        }
+
+
+
+
+
+
+
+
+        result[0]=costos[posDest];
+        System.out.println(costos[posDest]);
+        result[1]=resultadoTexto;
+
+        return result;
     }
+
 
     private int obtenerPosMenorVerticeNoVisitado(int[] costos, boolean[] visitados) {
         int posMin = -1;
@@ -206,17 +242,6 @@ public class GrafoComplejo {
     }
 
 
-
-    // PRE: existeVertice
-//    public void borrarVertice(String vert) {
-//        int posVert = obtenerPos(vert);
-//        this.vertices[posVert] = null;
-//        this.cantidad--;
-//        for (int i = 0; i < this.tope; i++) {
-//            this.matAdy[posVert][i] = new AristaCompleja();
-//            this.matAdy[i][posVert] = new AristaCompleja();
-//        }
-//    }
 
     public boolean existeVertice(Object vert) {
         return obtenerPos(vert) != -1;
@@ -256,20 +281,6 @@ public class GrafoComplejo {
 
         return retorno;
     }
-
-    // Pre: existeVertice(vert)
-
-//    public Lista<String> verticesIncidentes(String vert) {
-//        Lista<String> retorno = new ListaImp<>();
-//        int posVert = obtenerPos(vert);
-//        for (int i = 0; i < this.tope; i++) {
-//            if (this.matAdy[i][posVert].isExiste()) {
-//                retorno.insertar(this.vertices[i]);
-//            }
-//        }
-//        //Implementar...
-//        return retorno;
-//    }
 
 
 

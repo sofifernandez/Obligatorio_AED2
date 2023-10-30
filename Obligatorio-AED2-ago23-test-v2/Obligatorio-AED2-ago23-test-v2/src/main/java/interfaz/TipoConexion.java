@@ -33,4 +33,11 @@ public enum TipoConexion {
                 .orElse(null);
     }
 
+    @Override
+    public String toString() {
+        String upperCaseString = getTexto().toUpperCase();
+        String modifiedString = upperCaseString.replace(" ", "_");
+        return modifiedString;
+    }
+
 }
