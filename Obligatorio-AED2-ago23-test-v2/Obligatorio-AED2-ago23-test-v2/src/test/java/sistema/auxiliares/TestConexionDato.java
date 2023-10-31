@@ -63,4 +63,16 @@ public class TestConexionDato {
 //        return identificadorConexion == conexion.identificadorConexion;
 //    }
 
+
+    @Override
+    public String toString() {
+        return "TestConexionDato{" +
+                "ciudadOrigen=" + ciudadOrigen +
+                ", ciudadDestino=" + ciudadDestino +
+                ", identificadorConexion=" + identificadorConexion +
+                ", costo=" + costo +
+                ", tiempo=" + tiempo +
+                ", tipo=" + tipo +
+                '}';
+    }
 }

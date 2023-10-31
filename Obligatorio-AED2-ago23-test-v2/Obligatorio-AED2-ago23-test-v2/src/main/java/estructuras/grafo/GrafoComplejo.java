@@ -163,23 +163,20 @@ public class GrafoComplejo<T> {
     }
 
 
-    /*public Object[] dijkstra(Object vOrigen, Object vDest, Function<T, Integer>costExtractor) {
+    public Object[] dijkstra(Object vOrigen, Object vDest, Function<T, Double>costExtractor) {
         Object[] result = new Object[2];
-        String resultadoTexto="";
-
-        ListaDinamica camino= new ListaDinamica<>();
         int posOrigen = this.obtenerPos(vOrigen);
         int posDest = this.obtenerPos(vDest);
 
         boolean[] visitados = new boolean[this.tope];
         Object[] anteriores = new Object[this.tope];
-        String[] prueba =new String[this.tope];
-        int[] posAnteriores= new int[this.tope];
-        int[] costos = new int[this.tope];
+        //int[] costos = new int[this.tope];
+        double[] costos = new double[this.tope];
+        Object[] aristasMinimas=new Object[this.tope];
 
         //Inicializar las estructuras
         for (int i = 0; i < this.tope; i++) {
-            costos[i] = Integer.MAX_VALUE;
+            costos[i] = Double.MAX_VALUE;
             anteriores[i] = "**";
         }
         costos[posOrigen] = 0;
@@ -197,103 +194,38 @@ public class GrafoComplejo<T> {
                         //int costoNuevo = costos[pos] + (int)conexionMinima.getTiempo();
 
                         //DE ESTA FORMA ES GENÉRICO, PERO HUBO QUE AGREGARLE <T> A TODAS LAS CLASES
-
                         T aristaMenor= (T) matAdy[pos][j].menorDeLaLista();
-                        int costoNuevo = costos[pos] + costExtractor.apply(aristaMenor);
+                        double costoNuevo = costos[pos] + costExtractor.apply(aristaMenor);
                         if (costoNuevo < costos[j]) {
                             costos[j] = costoNuevo;
                             anteriores[j] = vertices[pos];
-                            posAnteriores[j]=pos;
-                            prueba[j] =vertices[pos]+ "|"+ aristaMenor +"|";
-                            //prueba[j]=vertices[pos].toString();
+                            aristasMinimas[j]=aristaMenor;
                         }
-                        resultadoTexto+=vertices[j]+ "|"+aristaMenor +"|";
                     }
                 }
             }
         }
 
+        int posAct=posDest;
+        String camino="";
 
-
-
-
-        for (int x=0;x<this.cantidad;x++){
-            System.out.println(x +" "+vertices[x]+" " + costos[x] + "<-- " + anteriores[x] + " " +posAnteriores[x]);
-            System.out.println(x +" "+prueba[x]);
+        while(posAct!=posOrigen && posAct>-1){
+            camino= aristasMinimas[posAct] + "|" + vertices[posAct] + "|" +camino;
+            posAct = this.obtenerPos(anteriores[posAct]);
         }
+        camino= vertices[posOrigen] +"|" +camino;
+        camino= camino.substring(0,camino.length()-1);
         result[0]=costos[posDest];
-        System.out.println(costos[posDest]);
-        result[1]=resultadoTexto;
+        result[1]=camino;
 
-        return result;
-    }*/
-    public Object[] dijkstraConCaminoYCosto(Object vOrigen, Object vDest) {
-        Object[] result = new Object[2];
-        int posOrigen = this.obtenerPos(vOrigen);
-        int posDest = this.obtenerPos(vDest);
-
-        boolean[] visitados = new boolean[this.tope];
-        Object[] anteriores = new Object[this.tope];
-        Object[] conexiones = new Object[this.tope];
-        int[] costos = new int[this.tope];
-
-        // Inicializar las estructuras
-        for (int i = 0; i < this.tope; i++) {
-            costos[i] = Integer.MAX_VALUE;
-            anteriores[i] = "**";
-        }
-
-        // Visitamos el vértice de origen
-        costos[posOrigen] = 0;
-
-        // Recorriendo vértices no visitados y obteniendo el menor
-        for (int v = 0; v < this.cantidad; v++) {
-            int pos = this.obtenerPosMenorVerticeNoVisitado(costos, visitados);
-            if (pos > -1) {
-                visitados[pos] = true;
-                // Evaluar adyacentes y ver si actualizamos costos y predecesores
-                for (int j = 0; j < this.tope; j++) {
-                    if (matAdy[pos][j].isExiste() && !visitados[j]) {
-                        Conexion conexionMinima = (Conexion) matAdy[pos][j].getLista().obtenerMenor();
-                        int costoNuevo = costos[pos] + (int)conexionMinima.getTiempo();
-                        if (costoNuevo < costos[j]) {
-                            costos[j] = costoNuevo;
-                            anteriores[j] = vertices[pos];
-                            conexiones[j] = conexionMinima.toString();
-                        }
-                    }
-                }
-            }
-        }
-        conexiones[posOrigen] = this.obtenerArista(vOrigen,vDest).obtenerMenor();
-
-        // Construir el camino
-
-        int nodoActual = posDest;
-        String caminoString = "";
-
-        while (!anteriores[nodoActual].equals("**")) {
-            if (nodoActual == posDest){
-                caminoString =  vertices[nodoActual]  +caminoString;
-            }else{
-                caminoString =  vertices[nodoActual] +"|"+ conexiones[nodoActual]+"|" +caminoString;
-
-            }
-
-            nodoActual = this.obtenerPos(anteriores[nodoActual]);
-        }
-        caminoString =  vertices[posOrigen] +"|"+ conexiones[posOrigen]+"|" +caminoString;
-
-        int costoMinimo = costos[posDest];
-        result[1] = caminoString;
-        result[0] = costoMinimo;
         return result;
     }
 
 
-    private int obtenerPosMenorVerticeNoVisitado(int[] costos, boolean[] visitados) {
+
+    private int obtenerPosMenorVerticeNoVisitado(double[] costos, boolean[] visitados) {
         int posMin = -1;
-        int min = Integer.MAX_VALUE;
+        double min = Double.MAX_VALUE;
         for (int i = 0; i < this.tope; i++) {
             if (!visitados[i] && costos[i] < min) {
                 min = costos[i];
@@ -357,6 +289,96 @@ public class GrafoComplejo<T> {
     public AristaCompleja[][] getMatAdy() {
         return matAdy;
     }
+
+/*
+    public Object[] dijkstraConCaminoYCosto(Object vOrigen, Object vDest) {
+        Object[] result = new Object[2];
+        int posOrigen = this.obtenerPos(vOrigen);
+        int posDest = this.obtenerPos(vDest);
+
+        boolean[] visitados = new boolean[this.tope];
+        Object[] anteriores = new Object[this.tope];
+        Object[] conexiones = new Object[this.tope];
+        int[] costos = new int[this.tope];
+
+        // Inicializar las estructuras
+        for (int i = 0; i < this.tope; i++) {
+            costos[i] = Integer.MAX_VALUE;
+            anteriores[i] = "**";
+        }
+
+        // Visitamos el vértice de origen
+        costos[posOrigen] = 0;
+
+        // Recorriendo vértices no visitados y obteniendo el menor
+        for (int v = 0; v < this.cantidad; v++) {
+            int pos = this.obtenerPosMenorVerticeNoVisitado(costos, visitados);
+            if (pos > -1) {
+                visitados[pos] = true;
+                // Evaluar adyacentes y ver si actualizamos costos y predecesores
+                for (int j = 0; j < this.tope; j++) {
+                    if (matAdy[pos][j].isExiste() && !visitados[j]) {
+                        Conexion conexionMinima = (Conexion) matAdy[pos][j].getLista().obtenerMenor();
+                        int costoNuevo = costos[pos] + (int)conexionMinima.getTiempo();
+                        if (costoNuevo < costos[j]) {
+                            costos[j] = costoNuevo;
+                            anteriores[j] = vertices[pos];
+                            conexiones[j] = conexionMinima.toString();
+                        }
+                    }
+                }
+            }
+        }
+        conexiones[posOrigen] = this.obtenerArista(vOrigen,vDest).obtenerMenor();
+
+        // Construir el camino
+
+        int nodoActual = posDest;
+        String caminoString = "";
+
+        while (!anteriores[nodoActual].equals("**")) {
+            if (nodoActual == posDest){
+                caminoString =  vertices[nodoActual]  +caminoString;
+            }else{
+                caminoString =  vertices[nodoActual] +"|"+ conexiones[nodoActual]+"|" +caminoString;
+            }
+
+            nodoActual = this.obtenerPos(anteriores[nodoActual]);
+        }
+        caminoString =  vertices[posOrigen] +"|"+ conexiones[posOrigen]+"|" +caminoString;
+
+
+
+        int posAct=posDest;
+        String camino="";
+
+        while(posAct!=posOrigen){
+            camino= conexiones[posAct] + "|" + vertices[posAct] + "|" +camino;
+            posAct = this.obtenerPos(anteriores[posAct]);
+        }
+        camino= vertices[posOrigen] +"|" +camino;
+        camino= camino.substring(0,camino.length()-1);
+        result[0]=costos[posDest];
+        result[1]=camino;
+
+
+        return result;
+    }
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     ///////////////////////////////////////////////////////////////////
     //FUNCIONES AUXILIARES
