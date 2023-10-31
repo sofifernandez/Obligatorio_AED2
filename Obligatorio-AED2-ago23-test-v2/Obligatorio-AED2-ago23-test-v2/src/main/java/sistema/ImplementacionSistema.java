@@ -151,9 +151,9 @@ public class ImplementacionSistema implements Sistema {
         destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
-        if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
+        //if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
         Conexion nuevaConexion = new Conexion(identificadorConexion,costo, tiempo, tipo);
-        if( grafoCiudades.existeDatoEnArista(origen,destino,nuevaConexion)) return Retorno.error6("Ya existe conexión con ese identificador");
+        if(grafoCiudades.existeDatoEnArista(origen,destino,nuevaConexion)) return Retorno.error6("Ya existe conexión con ese identificador");
         grafoCiudades.agregarArista(origen,destino,nuevaConexion);
         return Retorno.ok();
     }
@@ -169,12 +169,11 @@ public class ImplementacionSistema implements Sistema {
         destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
-        if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
+        //if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
         Conexion nuevaConexion = (Conexion) grafoCiudades.obtenerDatoEnArista(origen,destino,new Conexion(identificadorConexion,costo, tiempo, tipo));
         if(nuevaConexion==null) return Retorno.error6("No existe conexión con ese identificador");
         nuevaConexion.editar(costo, tiempo, tipo);
         //grafoCiudades.agregarArista(origen,destino,nuevaConexion);
-
         return Retorno.ok();
     }
 
@@ -208,7 +207,7 @@ public class ImplementacionSistema implements Sistema {
         double resultadDouble= (double) resultado[0];
         int resultadoInt= (int) resultadDouble;
         String resultadoString= (String) resultado[1];
-        grafoCiudades.obtenerArista(origen,destino).imprimirDatos();
+        //grafoCiudades.obtenerArista(origen,destino).imprimirDatos();
 
         return Retorno.ok(resultadoInt,resultadoString);
 

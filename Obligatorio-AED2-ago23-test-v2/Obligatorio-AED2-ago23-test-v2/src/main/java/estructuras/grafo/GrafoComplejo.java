@@ -168,14 +168,14 @@ public class GrafoComplejo<T> {
         int posOrigen = this.obtenerPos(vOrigen);
         int posDest = this.obtenerPos(vDest);
 
-        boolean[] visitados = new boolean[this.tope];
-        Object[] anteriores = new Object[this.tope];
-        //int[] costos = new int[this.tope];
-        double[] costos = new double[this.tope];
-        Object[] aristasMinimas=new Object[this.tope];
+        boolean[] visitados = new boolean[this.cantidad];
+        Object[] anteriores = new Object[this.cantidad];
+        double[] costos = new double[this.cantidad];
+        Object[] aristasMinimas=new Object[this.cantidad];
+
 
         //Inicializar las estructuras
-        for (int i = 0; i < this.tope; i++) {
+        for (int i = 0; i < this.cantidad; i++) {
             costos[i] = Double.MAX_VALUE;
             anteriores[i] = "**";
         }
@@ -186,7 +186,7 @@ public class GrafoComplejo<T> {
             if (pos > -1) {
                 visitados[pos] = true;
                 //Evaluar adyacentes y ver si actualizabamos costos
-                for (int j = 0; j < this.tope; j++) {
+                for (int j = 0; j < this.cantidad; j++) {
                     if (matAdy[pos][j].isExiste() && !visitados[j]) {
 
                         //DE ESTA FORMA NO ES GENÉRICO
@@ -226,7 +226,7 @@ public class GrafoComplejo<T> {
     private int obtenerPosMenorVerticeNoVisitado(double[] costos, boolean[] visitados) {
         int posMin = -1;
         double min = Double.MAX_VALUE;
-        for (int i = 0; i < this.tope; i++) {
+        for (int i = 0; i < this.cantidad; i++) {
             if (!visitados[i] && costos[i] < min) {
                 min = costos[i];
                 posMin = i;
@@ -267,7 +267,7 @@ public class GrafoComplejo<T> {
     public ListaDinamica verticesAdyacentes(Object vert) {
         ListaDinamica retorno = new ListaDinamica();
         int posVert = obtenerPos(vert);
-        for (int i = 0; i < this.tope; i++) {
+        for (int i = 0; i < this.cantidad; i++) {
             if (this.matAdy[posVert][i].isExiste()) {
                 retorno.insertar((Comparable) this.vertices[i]);
             }

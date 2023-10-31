@@ -72,8 +72,8 @@ public class Conexion implements Comparable<Conexion> {
 
     @Override
     public int compareTo(Conexion o) {
-        if (this.getTiempo() > o.getTiempo()) return -1;
-        if (this.getTiempo() < o.getTiempo()) return 1;
+        if (this.getTiempo() > o.getTiempo()) return 1;
+        if (this.getTiempo() < o.getTiempo()) return -1;
         return 0;
         //return Double.compare(o.getTiempo(), this.getTiempo());
     }
