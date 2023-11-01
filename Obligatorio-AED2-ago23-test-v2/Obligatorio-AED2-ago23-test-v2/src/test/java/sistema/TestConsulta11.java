@@ -62,7 +62,6 @@ public class TestConsulta11 {
         TestConexionDato paris_2_mvd = agregueUnaBidireccionalConexionCorrectamente(s, PARIS_2, MVD, 1, 8, 15, TipoConexion.RUTA_AEREA);
         chequearCaminoMasCortoEsCorrecto(s, BERLIN, PARIS, berlin_paris);
         chequearCaminoMasCortoEsCorrecto(s, BERLIN, NY, berlin_paris, paris_ny);
-        //ESTE ACTUALIZAR FUNCIONA!
         actualizoUnaConexion(s, PARIS, NY, 1, 100, 1023, TipoConexion.RUTA_MARITIMA);
         chequearCaminoMasCortoEsCorrecto(s, BERLIN, NY, berlin_tokyo, mvd_tokyo.invertir(), mvd_rio, rio_ny);
     }
@@ -160,31 +159,23 @@ public class TestConsulta11 {
         //Obligamos a pasar ahora si por a_3
         a_3_mvd_paris_2 = actualiceUnaConexionCorrectamente(s, a_3_mvd_paris_2.withTiempo(1).withTipo(TipoConexion.OTRA_RUTA));
         //https://dreampuf.github.io/GraphvizOnline/#digraph%20G%7B%0AV_0%5Blabel%3D%220001BER%3BBerlin%22%5D%3B%0AV_1%5Blabel%3D%22MADRID%3BMadrid%22%5D%3B%0AV_2%5Blabel%3D%22TOKYO%3BTokio%22%5D%3B%0AV_3%5Blabel%3D%22SAN232%3BSantiago%20de%20Chile%22%5D%3B%0AV_4%5Blabel%3D%22WAHS11%3BWashington%22%5D%3B%0AV_5%5Blabel%3D%22PAR01%3BCharles%20de%20Gaulle%22%5D%3B%0AV_6%5Blabel%3D%22MVD001%3BMontevideo%22%5D%3B%0AV_7%5Blabel%3D%22PAR002%3BOrly%22%5D%3B%0AV_8%5Blabel%3D%22RIO01%3BRio%20de%20janeiro%22%5D%3B%0AV_9%5Blabel%3D%22NYNYNY%3BNew%20york%22%5D%3B%0AV_1-%3EV_3%5Blabel%3D%22100.0%22%5D%3B%0AV_1-%3EV_8%5Blabel%3D%22100.0%22%5D%3B%0AV_2-%3EV_9%5Blabel%3D%2224.0%22%5D%3B%0AV_3-%3EV_2%5Blabel%3D%22100.0%22%5D%3B%0AV_4-%3EV_9%5Blabel%3D%2224.0%22%5D%3B%0AV_5-%3EV_0%5Blabel%3D%22100.0%22%5D%3B%0AV_5-%3EV_1%5Blabel%3D%22100.0%22%5D%3B%0AV_6-%3EV_1%5Blabel%3D%22100.0%22%5D%3B%0AV_6-%3EV_7%5Blabel%3D%22400.0%2C1.0%2C200.0%2C600.0%22%5D%3B%0AV_7-%3EV_4%5Blabel%3D%22100.0%22%5D%3B%0AV_7-%3EV_9%5Blabel%3D%2224.0%22%5D%3B%0AV_8-%3EV_6%5Blabel%3D%22100.0%22%5D%3B%0AV_9-%3EV_2%5Blabel%3D%2224.0%22%5D%3B%0AV_9-%3EV_7%5Blabel%3D%22100.0%22%5D%3B%0A%7D%0A
-        //ESTA NO FUNCIONA:
         chequearCaminoMasCortoEsCorrecto(s, PARIS, WASHINGTON, paris_madrid, madrid_rio, rio_mvd, a_3_mvd_paris_2, paris_2_washington);
         a_3_mvd_paris_2 = actualiceUnaConexionCorrectamente(s, a_3_mvd_paris_2.withTiempo(1200));
         //al volverla deberia volver a dar el mismo camino
-        //ESTA SI:
         chequearCaminoMasCortoEsCorrecto(s, PARIS, WASHINGTON, paris_madrid, madrid_santiago, santiago_tokyo, tokyo_ny, ny_paris_2, paris_2_washington);
-
         TestConexionDato paris_washington = agregueUnaConexionCorrectamente(s, PARIS, WASHINGTON, 1, 20, 300, TipoConexion.RUTA_FERROVIARIA);
-        //ESTA SI:
         chequearCaminoMasCortoEsCorrecto(s, PARIS, TOKYO, paris_madrid, madrid_santiago, santiago_tokyo);
         //no voy en tren voy en avion
         TestConexionDato paris_washington_2 = agregueUnaConexionCorrectamente(s, PARIS, WASHINGTON, 2, 20, 10, TipoConexion.RUTA_AEREA);
         //https://dreampuf.github.io/GraphvizOnline/#digraph%20G%7B%0AV_0%5Blabel%3D%220001BER%3BBerlin%22%5D%3B%0AV_1%5Blabel%3D%22MADRID%3BMadrid%22%5D%3B%0AV_2%5Blabel%3D%22TOKYO%3BTokio%22%5D%3B%0AV_3%5Blabel%3D%22SAN232%3BSantiago%20de%20Chile%22%5D%3B%0AV_4%5Blabel%3D%22WAHS11%3BWashington%22%5D%3B%0AV_5%5Blabel%3D%22PAR01%3BCharles%20de%20Gaulle%22%5D%3B%0AV_6%5Blabel%3D%22MVD001%3BMontevideo%22%5D%3B%0AV_7%5Blabel%3D%22PAR002%3BOrly%22%5D%3B%0AV_8%5Blabel%3D%22RIO01%3BRio%20de%20janeiro%22%5D%3B%0AV_9%5Blabel%3D%22NYNYNY%3BNew%20york%22%5D%3B%0AV_1-%3EV_3%5Blabel%3D%22100.0%22%5D%3B%0AV_1-%3EV_8%5Blabel%3D%22100.0%22%5D%3B%0AV_2-%3EV_9%5Blabel%3D%2224.0%22%5D%3B%0AV_3-%3EV_2%5Blabel%3D%22100.0%22%5D%3B%0AV_4-%3EV_9%5Blabel%3D%2224.0%22%5D%3B%0AV_5-%3EV_0%5Blabel%3D%22100.0%22%5D%3B%0AV_5-%3EV_1%5Blabel%3D%22100.0%22%5D%3B%0AV_5-%3EV_4%5Blabel%3D%2210.0%2C300.0%22%5D%3B%0AV_6-%3EV_1%5Blabel%3D%22100.0%22%5D%3B%0AV_6-%3EV_7%5Blabel%3D%22400.0%2C1200.0%2C200.0%2C600.0%22%5D%3B%0AV_7-%3EV_4%5Blabel%3D%22100.0%22%5D%3B%0AV_7-%3EV_9%5Blabel%3D%2224.0%22%5D%3B%0AV_8-%3EV_6%5Blabel%3D%22100.0%22%5D%3B%0AV_9-%3EV_2%5Blabel%3D%2224.0%22%5D%3B%0AV_9-%3EV_7%5Blabel%3D%22100.0%22%5D%3B%0A%7D%0A
-        //ESTA NO:
         chequearCaminoMasCortoEsCorrecto(s, PARIS, TOKYO, paris_washington_2, washington_ny, ny_tokyo);
         TestConexionDato berlin_paris_2 = agregueUnaConexionCorrectamente(s, BERLIN, PARIS_2, 1, 10, 10, TipoConexion.OTRA_RUTA);
         TestConexionDato paris_2_santiago = agregueUnaConexionCorrectamente(s, PARIS_2, SANTIAGO, 1, 10, 10, TipoConexion.OTRA_RUTA);
-        //ESTA NO:
         chequearCaminoMasCortoEsCorrecto(s, PARIS, TOKYO, paris_washington_2, washington_ny, ny_tokyo);
         TestConexionDato a2_paris_berlin = agregueUnaBidireccionalConexionCorrectamente(s, PARIS, BERLIN, 3, 10, 5, TipoConexion.OTRA_RUTA);
         TestConexionDato a3_paris_berlin = agregueUnaBidireccionalConexionCorrectamente(s, PARIS, BERLIN, 4, 10, 1, TipoConexion.OTRA_RUTA);
-        //ESTA NO:
         chequearCaminoMasCortoEsCorrecto(s, PARIS, TOKYO, paris_washington_2, washington_ny, ny_tokyo);
         santiago_tokyo = actualiceUnaConexionCorrectamente(s, santiago_tokyo.withTiempo(10));
-        //ESTA NO:
         chequearCaminoMasCortoEsCorrecto(s, PARIS, TOKYO, a3_paris_berlin, berlin_paris_2, paris_2_santiago, santiago_tokyo);
     }
 

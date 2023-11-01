@@ -35,20 +35,6 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
     }
 
     @Override
-    public void borrar(T dato) {
-        if (inicio.getDato().equals(dato)) {
-            inicio = inicio.getSig();
-        } else {
-            NodoLista<T> aux = inicio;
-            while (!aux.getSig().getDato().equals(dato)) {
-                aux = aux.getSig();
-            }
-            aux.setSig(aux.getSig().getSig());
-        }
-        largo--;
-    }
-
-    @Override
     public int largo() {
         return largo;
     }
@@ -87,19 +73,6 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
         return false;
     }
 
-    @Override
-    public void imprimirDatos() {
-        NodoLista<T> aux = inicio;
-        while (aux != null) {
-            if (aux.getSig() != null){
-                System.out.print(aux.getDato() + " -> ");
-            }else{
-                System.out.print(aux.getDato());
-            }
-            aux = aux.getSig();
-        }
-        System.out.println();
-    }
 
     @Override
     public String obtenerTodosComoString() {
@@ -132,9 +105,7 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
 
         return menor;
     }
-    /**
-     * Ejercicio 3 - Parte B
-     */
+
     @Override
     public void insertarFinal(T n) {
         if (inicio == null) {
@@ -145,9 +116,7 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
 
     }
 
-    /**
-     * Ejercicio 3 - Parte B
-     */
+
     private void insertarFinal(NodoLista<T> unNodoLista, T unN) {
         if (unNodoLista.getSig() == null) {
             unNodoLista.setSig(new NodoLista<T>(unN));
@@ -156,9 +125,7 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
         }
     }
 
-    /**
-     * Ejercicio 3 - Parte C
-     */
+
     @Override
     public boolean estaOrdenada() {
         if(inicio==null){
@@ -168,18 +135,28 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
         }
     }
 
-    /**
-     * Ejercicio 3 - Parte C
-     */
+
     private boolean estaOrdenada(NodoLista<T> unNodo){
         if(unNodo.getSig()==null){
             return true;
         }else{
             return (unNodo.getDato().compareTo(unNodo.getSig().getDato()) < 0)  && estaOrdenada(unNodo.getSig());
         }
-
     }
 
+    ///////////////////////////////////////////////////////////
+    // NO UTILIZADAS PERO UTILES A FUTURO
+
+    public T getValueByIndex(int index) {
+        if (index < 0 || index >= largo) {
+            throw new IndexOutOfBoundsException("Index out of bounds");
+        }
+        NodoLista<T> current = inicio;
+        for (int i = 0; i < index; i++) {
+            current = current.getSig();
+        }
+        return current.getDato();
+    }
 
     @Override
     public Iterator<T> iterator() {
@@ -202,21 +179,35 @@ public class ListaDinamica<T extends Comparable<T>> implements Lista<T> {
             @Override
             public void remove() {
             }
-
         };
     }
 
-    public T get(int index) {
-        if (index < 0 || index >= largo) {
-            throw new IndexOutOfBoundsException("Index out of bounds");
+    @Override
+    public void imprimirDatos() {
+        NodoLista<T> aux = inicio;
+        while (aux != null) {
+            if (aux.getSig() != null){
+                System.out.print(aux.getDato() + " -> ");
+            }else{
+                System.out.print(aux.getDato());
+            }
+            aux = aux.getSig();
         }
+        System.out.println();
+    }
 
-        NodoLista<T> current = inicio;
-        for (int i = 0; i < index; i++) {
-            current = current.getSig();
+    @Override
+    public void borrar(T dato) {
+        if (inicio.getDato().equals(dato)) {
+            inicio = inicio.getSig();
+        } else {
+            NodoLista<T> aux = inicio;
+            while (!aux.getSig().getDato().equals(dato)) {
+                aux = aux.getSig();
+            }
+            aux.setSig(aux.getSig().getSig());
         }
-
-        return current.getDato();
+        largo--;
     }
 
 

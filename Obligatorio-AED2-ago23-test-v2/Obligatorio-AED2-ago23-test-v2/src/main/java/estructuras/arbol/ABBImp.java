@@ -1,8 +1,6 @@
 package estructuras.arbol;
 
 
-import estructuras.tad.lista.ListaEnterosDinamica;
-
 import java.util.LinkedList;
 import java.util.Queue;
 

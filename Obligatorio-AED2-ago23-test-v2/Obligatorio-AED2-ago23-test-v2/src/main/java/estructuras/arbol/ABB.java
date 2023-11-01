@@ -1,7 +1,5 @@
 package estructuras.arbol;
 
-import estructuras.tad.lista.ListaEnterosDinamica;
-
 public interface ABB<T> {
     void insertar(T x);
 

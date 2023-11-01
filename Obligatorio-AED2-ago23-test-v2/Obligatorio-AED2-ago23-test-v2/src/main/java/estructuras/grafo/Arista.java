@@ -1,18 +1,15 @@
 package estructuras.grafo;
 
-public class Arista {
-    private boolean existe;
-    private int peso;
+import estructuras.tad.lista.ListaDinamica;
 
+public class Arista<T> {
+
+    private boolean existe;
+    private ListaDinamica lista;
 
     public Arista() {
         this.existe = false;
-        this.peso = 0;
-    }
-
-    public Arista(int unPeso) {
-        this.existe = true;
-        this.peso = unPeso;
+        this.lista = new ListaDinamica();
     }
 
     public boolean isExiste() {
@@ -23,11 +20,27 @@ public class Arista {
         this.existe = existe;
     }
 
-    public int getPeso() {
-        return peso;
+    public ListaDinamica getLista() {
+        return lista;
     }
 
-    public void setPeso(int peso) {
-        this.peso = peso;
+    public void setLista(ListaDinamica lista) {
+        this.lista = lista;
+    }
+
+    public void agregarALista(Object obj){
+        lista.insertar((Comparable) obj);
+    }
+
+    public boolean existeEnLista(Object obj){
+        return lista.existe((Comparable) obj);
+    }
+
+    public Object datoEnLista(Object obj){
+        return lista.recuperar((Comparable) obj);
+    }
+
+    public T menorDeLaLista(){
+         return (T) this.lista.obtenerMenor();
     }
 }

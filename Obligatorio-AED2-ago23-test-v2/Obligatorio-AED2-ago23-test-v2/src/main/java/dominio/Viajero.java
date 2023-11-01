@@ -30,14 +30,12 @@ public class Viajero implements Comparable<Viajero>{
         String cedulaSinGuion = cedula.replaceAll("-.*", "");
         String[] partes = cedulaSinGuion.split("\\.");
         String cedulaNumerica = String.join("", partes);
-
         // Convierte la cédula normalizada a un número int
         try {
-
             return Integer.parseInt(cedulaNumerica);
         } catch (NumberFormatException e) {
             // Manejo de error si la cédula no es un número válido
-            return 0; // O puedes lanzar una excepción, según tus necesidades.
+            return 0; //
         }
     }
 

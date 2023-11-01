@@ -4,20 +4,25 @@ import dominio.Ciudad;
 import dominio.Conexion;
 import dominio.Viajero;
 import estructuras.arbol.ABBImp;
-import estructuras.grafo.GrafoComplejo;
+import estructuras.grafo.Grafo;
 import interfaz.*;
 
 import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/*
+|----------------------------------------------------------------------------------------------------------------|
+                                    LUCAS DIVENUTO -->  293644
+                                    SOFÍA FERNÁNDEZ --> 292523
+|----------------------------------------------------------------------------------------------------------------|
+*/
 public class ImplementacionSistema implements Sistema {
-
     private ABBImp arbolViajeros;
     private ABBImp arbolPremium;
     private ABBImp arbolEstandar;
     private ABBImp arbolCasual;
-    private GrafoComplejo grafoCiudades;
+    private Grafo grafoCiudades;
 
     @Override
     public Retorno inicializarSistema(int maxCiudades) {
@@ -26,7 +31,7 @@ public class ImplementacionSistema implements Sistema {
             arbolPremium=new ABBImp();
             arbolEstandar=new ABBImp();
             arbolCasual=new ABBImp();
-            grafoCiudades= new GrafoComplejo(maxCiudades, true);
+            grafoCiudades= new Grafo(maxCiudades, true);
             return Retorno.ok();
         }
         return Retorno.error1("El sistema debe tener más de 5 ciudades");
@@ -80,7 +85,6 @@ public class ImplementacionSistema implements Sistema {
         if(lista.length()>0){
             lista= lista.substring(0, lista.length()-1);
         }
-
         return Retorno.ok(lista);
 
     }
@@ -91,7 +95,6 @@ public class ImplementacionSistema implements Sistema {
        if(lista.length()>0){
            lista= lista.substring(1, lista.length());
        }
-
         return Retorno.ok(lista);
     }
 
@@ -136,6 +139,8 @@ public class ImplementacionSistema implements Sistema {
         Ciudad nuevaCiudad=new Ciudad(codigo,nombre);
         if(!nuevaCiudad.esValidoCodigo(codigo)) return Retorno.error3("El código es inválido");
         if(grafoCiudades.existeVertice(nuevaCiudad)) return Retorno.error4("Ese código ya existe");
+        //No se pide el error relacionado a si está lleno el grafo, pero si se pidiera sería:
+        //if(grafoCiudades.estaLleno()) return Retorno.errorX("No se pueden registrar más ciudades")
         grafoCiudades.agregarVertice(nuevaCiudad);
         return Retorno.ok();
     }
@@ -151,7 +156,6 @@ public class ImplementacionSistema implements Sistema {
         destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
-        //if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
         Conexion nuevaConexion = new Conexion(identificadorConexion,costo, tiempo, tipo);
         if(grafoCiudades.existeDatoEnArista(origen,destino,nuevaConexion)) return Retorno.error6("Ya existe conexión con ese identificador");
         grafoCiudades.agregarArista(origen,destino,nuevaConexion);
@@ -169,11 +173,9 @@ public class ImplementacionSistema implements Sistema {
         destino =(Ciudad) grafoCiudades.obtenerVertice(new Ciudad(codigoCiudadDestino));
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
-        //if(!origen.esValidoCodigo(codigoCiudadOrigen) || !destino.esValidoCodigo(codigoCiudadDestino)) return Retorno.error3("Los códigos de la ciudades no tienen el formato adecuado");
         Conexion nuevaConexion = (Conexion) grafoCiudades.obtenerDatoEnArista(origen,destino,new Conexion(identificadorConexion,costo, tiempo, tipo));
         if(nuevaConexion==null) return Retorno.error6("No existe conexión con ese identificador");
         nuevaConexion.editar(costo, tiempo, tipo);
-        //grafoCiudades.agregarArista(origen,destino,nuevaConexion);
         return Retorno.ok();
     }
 
@@ -199,22 +201,14 @@ public class ImplementacionSistema implements Sistema {
         if(origen==null) return Retorno.error4("La ciudad de origen no existe en el sistema");
         if(destino==null) return Retorno.error5("La ciudad de destino no existe en el sistema");
         if (!grafoCiudades.existeCamino(origen,destino)) return Retorno.error3("No existe ruta para conectar las ciudades");
-
-        //Por lo que dan los test, el valorEntero lo devuelve bien, siempre coincide con el resultado del test
-        //Lo que falta es el valorString, por eso los muestra con error.
+        //Esto es para que deje hacer dijiskstra genérico, se manda esta función lambda para que extraiga el peso que quiera según lo que me interesa,
+        //en este caso quiero el tiempo, pero si quisiera lo podría hacer por otro valor, como precio.
         Function<Conexion, Double> costExtractor = conexion -> Double.valueOf(conexion.getTiempo());
         Object[] resultado = grafoCiudades.dijkstra(origen,destino,costExtractor);
         double resultadDouble= (double) resultado[0];
         int resultadoInt= (int) resultadDouble;
         String resultadoString= (String) resultado[1];
-        //grafoCiudades.obtenerArista(origen,destino).imprimirDatos();
-
         return Retorno.ok(resultadoInt,resultadoString);
-
-//        Object[] resultado = grafoCiudades.dijkstraConCaminoYCosto(origen, destino);
-//        int resultadoInt = (int) resultado[0] ;
-//        String resultadoString= (String) resultado[1];
-//        return Retorno.ok(resultadoInt,resultadoString);
     }
 
     /////////////////////////////////////////////////////////////
@@ -236,7 +230,5 @@ public class ImplementacionSistema implements Sistema {
         Matcher matcher = pattern.matcher(cedula);
         return matcher.matches();
     }
-
-
 
 }
